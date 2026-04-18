@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For My Love 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: linear-gradient(135deg,#ff758c,#ff7eb3);
+  overflow:hidden;
+}
+
+.card{
+  background:#fff;
+  padding:30px;
+  border-radius:20px;
+  text-align:center;
+  box-shadow:0 10px 40px rgba(0,0,0,0.2);
+  width:90%;
+  max-width:360px;
+  animation:fadeIn 0.8s ease;
+}
+
+h1{color:#ff2e63;margin-bottom:10px;}
+p{color:#444;margin-bottom:20px;line-height:1.5;}
+
+button{
+  padding:10px 18px;
+  border:none;
+  border-radius:10px;
+  font-size:15px;
+  cursor:pointer;
+  margin:6px;
+  transition:0.3s;
+}
+
+.yes{background:#ff2e63;color:#fff;}
+.no{background:#ddd;position:relative;}
+
+.hidden{display:none;}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ❤️ hearts */
+.heart{
+  position:absolute;
+  color:#ff2e63;
+  animation:float 4s linear infinite;
+}
+
+@keyframes float{
+  0%{transform:translateY(0);opacity:1}
+  100%{transform:translateY(-100vh);opacity:0}
+}
+
+/* 😔 sad emojis */
+.sad{
+  position:absolute;
+  opacity:0.7;
+  animation:floatSad 5s linear infinite;
+}
+
+@keyframes floatSad{
+  0%{transform:translateY(0);opacity:0.8}
+  100%{transform:translateY(-100vh);opacity:0}
+}
+
+.final-text{
+  font-size:18px;
+  color:#ff2e63;
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="bgMusic" loop>
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<!-- STEP 1 -->
+<div class="card" id="step1">
+  <h1>Puku 😔</h1>
+  <p id="question">Are you upset with me?</p>
+  <button class="yes" onclick="nextQuestion()">Yes 😒</button>
+  <button class="yes" onclick="nextQuestion()">No 🙂</button>
+</div>
+
+<!-- STEP 2 -->
+<div class="card hidden" id="step2">
+  <h1>Please Forgive Me 🥺</h1>
+  <p>I truly didn't mean to hurt you...</p>
+  <button class="yes" onclick="finalPage()">Forgive ❤️</button>
+  <button class="no" id="noBtn">No 😒</button>
+</div>
+
+<!-- FINAL -->
+<div class="card hidden" id="final">
+  <h1>I Love You ❤️</h1>
+  <p class="final-text">
+    You are not just someone I love… you are my safe place, my happiness, and the most beautiful part of my life 💖  
+    Every moment with you feels like a dream I never want to wake up from.  
+    Your smile fixes everything, your voice calms my chaos, and your presence makes my world complete.  
+    I know I make mistakes, but my love for you is always real, always deep, and always yours.  
+    No matter what happens, I will keep choosing you, again and again… because loving you is the best thing I’ve ever done ❤️  
+    Please don’t stay mad at me… it hurts more than anything 💔
+  </p>
+</div>
+
+<script>
+const noBtn = document.getElementById('noBtn');
+const music = document.getElementById('bgMusic');
+
+/* QUESTIONS FLOW */
+const questions = [
+  "Are you upset with me?",
+  "Are you still angry at me? 🥺",
+  "Did I hurt you? I didn't mean to...",
+  "Will you talk to me please? 💔",
+  "Please don’t stay mad at me… it hurts more than anything 💔"
+];
+
+let qIndex = 0;
+
+function nextQuestion(){
+  qIndex++;
+  if(qIndex < questions.length){
+    document.getElementById("question").innerText = questions[qIndex];
+  } else {
+    goStep2();
+  }
+}
+
+/* STEP CHANGE */
+function goStep2(){
+  document.getElementById('step1').classList.add('hidden');
+  document.getElementById('step2').classList.remove('hidden');
+  stopSadEmojis(); // stop sad effect
+}
+
+function finalPage(){
+  document.getElementById('step2').classList.add('hidden');
+  document.getElementById('final').classList.remove('hidden');
+  startHearts();
+  music.play().catch(()=>{});
+}
+
+/* NO BUTTON RUN */
+noBtn.addEventListener('mouseover', () => {
+  const x = Math.random() * (window.innerWidth - 100);
+  const y = Math.random() * (window.innerHeight - 50);
+
+  noBtn.style.position = 'absolute';
+  noBtn.style.left = x + 'px';
+  noBtn.style.top = y + 'px';
+});
+
+/* ❤️ HEARTS */
+function startHearts(){
+  setInterval(()=>{
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.innerText = '❤️';
+
+    heart.style.left = Math.random()*100 + 'vw';
+    heart.style.fontSize = (Math.random()*20 + 10) + 'px';
+
+    document.body.appendChild(heart);
+    setTimeout(()=> heart.remove(),4000);
+  },400);
+}
+
+/* 😔 SAD EMOJIS */
+let sadInterval;
+
+function startSadEmojis(){
+  sadInterval = setInterval(()=>{
+    const emoji = document.createElement('div');
+    emoji.classList.add('sad');
+
+    const emojis = ["😔","💔","🥺"];
+    emoji.innerText = emojis[Math.floor(Math.random()*emojis.length)];
+
+    emoji.style.left = Math.random()*100 + 'vw';
+    emoji.style.fontSize = (Math.random()*25 + 15) + 'px';
+
+    document.body.appendChild(emoji);
+    setTimeout(()=> emoji.remove(),5000);
+  },400);
+}
+
+function stopSadEmojis(){
+  clearInterval(sadInterval);
+}
+
+/* START SAD EFFECT ON LOAD */
+startSadEmojis();
+
+/* ENABLE MUSIC */
+document.body.addEventListener('click',()=>{
+  music.play().catch(()=>{});
+});
+</script>
+
+</body>
+</html>
